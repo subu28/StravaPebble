@@ -38,6 +38,10 @@ public class MainActivity extends Activity {
         sendBroadcast(i);
     }
 
+    public void askPermission(View v) {
+        startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+    }
+
     class NotificationReceiver extends BroadcastReceiver{
 
         @Override

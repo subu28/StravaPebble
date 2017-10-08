@@ -11,12 +11,22 @@ tools:context=".MainActivity">
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="List of Notification"
-        android:id="@+id/btnListNotify"
-        android:onClick="buttonClicked"
+        android:text="Allow Access to Notifications"
+        android:id="@+id/btnPermission"
+        android:onClick="askPermission"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List of Notification"
+        android:id="@+id/btnListNotify"
+        android:onClick="buttonClicked"
+        android:layout_below="@+id/btnPermission"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
     <ScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +39,7 @@ tools:context=".MainActivity">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="NotificationListenerService Example"
+            android:text="NotificationListenerService Logs"
             android:id="@+id/textView"/>
     </ScrollView>
 

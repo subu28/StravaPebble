@@ -28,6 +28,7 @@ public class NotificationListener extends NotificationListenerService {
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.sanyaas.stravapebble.NOTIFICATION_LISTENER_SERVICE");
         registerReceiver(nlservicereciver,filter);
+        PebbleKit.registerReceivedDataHandler(getApplicationContext(), receiver);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class NotificationListener extends NotificationListenerService {
         Log.i(TAG,"**********  onNotificationPosted");
         Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText + "\t" + sbn.getPackageName());
         Intent i = new  Intent("com.sanyaas.stravapebble.NOTIFICATION_LISTENER");
-        i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n" + sbn.getNotification().extras.get("android.title") + "\n");
+        i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n");
         if(!pebbleAppStatus){
             PebbleKit.startAppOnPebble(getApplicationContext(), Constants.SPORTS_UUID);
             PebbleDictionary dict = new PebbleDictionary();
@@ -87,6 +88,7 @@ public class NotificationListener extends NotificationListenerService {
             paceSplitPace = minutesPart + ":" + secondsPartString;
             paceSplitStartTime = currentTime;
             paceSplitStartDistance = dist;
+            pebbleAppStatus = false;
         }
         return paceSplitPace;
     }
@@ -109,13 +111,6 @@ public class NotificationListener extends NotificationListenerService {
             sendBroadcast(i1);
             int i=1;
             for (StatusBarNotification sbn : NotificationListener.this.getActiveNotifications()) {
-                if ("com.strava".equalsIgnoreCase(sbn.getPackageName())){
-                    try {
-                        sbn.getNotification().actions[0].actionIntent.send();
-                    } catch (PendingIntent.CanceledException e) {
-                        e.printStackTrace();
-                    }
-                }
                 Intent i2 = new  Intent("com.sanyaas.stravapebble.NOTIFICATION_LISTENER");
                 i2.putExtra("notification_event",i +" " + sbn.getPackageName() + "\n");
                 sendBroadcast(i2);
@@ -129,4 +124,39 @@ public class NotificationListener extends NotificationListenerService {
         }
     }
 
+    PebbleKit.PebbleDataReceiver receiver = new PebbleKit.PebbleDataReceiver(Constants.SPORTS_UUID) {
+
+        @Override
+        public void receiveData(Context context, int id, PebbleDictionary data) {
+            // Always ACKnowledge the last message to prevent timeouts
+            PebbleKit.sendAckToPebble(getApplicationContext(), id);
+
+            Long value = data.getUnsignedIntegerAsLong(Constants.SPORTS_STATE_KEY);
+            if(value != null) {
+                int state = value.intValue();
+                if (state == Constants.SPORTS_STATE_PAUSED){
+                    for (StatusBarNotification sbn : NotificationListener.this.getActiveNotifications()) {
+                        if ("com.strava".equalsIgnoreCase(sbn.getPackageName()) && "start".equalsIgnoreCase(sbn.getNotification().actions[0].title.toString())){
+                            try {
+                                sbn.getNotification().actions[0].actionIntent.send();
+                            } catch (PendingIntent.CanceledException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } else {
+                    for (StatusBarNotification sbn : NotificationListener.this.getActiveNotifications()) {
+                        if ("com.strava".equalsIgnoreCase(sbn.getPackageName()) && "stop".equalsIgnoreCase(sbn.getNotification().actions[0].title.toString())){
+                            try {
+                                sbn.getNotification().actions[0].actionIntent.send();
+                            } catch (PendingIntent.CanceledException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    };
 }

@@ -39,7 +39,7 @@ public class NotificationListener extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        if (!"com.strava".equalsIgnoreCase(sbn.getPackageName())){
+        if (!"com.strava".equalsIgnoreCase(sbn.getPackageName()) || sbn.getNotification().actions.length == 0){
             return;
         }
         Log.i(TAG,"**********  onNotificationPosted");
@@ -136,22 +136,24 @@ public class NotificationListener extends NotificationListenerService {
                 int state = value.intValue();
                 if (state == Constants.SPORTS_STATE_PAUSED){
                     for (StatusBarNotification sbn : NotificationListener.this.getActiveNotifications()) {
-                        if ("com.strava".equalsIgnoreCase(sbn.getPackageName()) && "start".equalsIgnoreCase(sbn.getNotification().actions[0].title.toString())){
+                        if ("com.strava".equalsIgnoreCase(sbn.getPackageName()) && sbn.getNotification().actions.length > 0 && "start".equalsIgnoreCase(sbn.getNotification().actions[0].title.toString())){
                             try {
                                 sbn.getNotification().actions[0].actionIntent.send();
                             } catch (PendingIntent.CanceledException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         }
                     }
                 } else {
                     for (StatusBarNotification sbn : NotificationListener.this.getActiveNotifications()) {
-                        if ("com.strava".equalsIgnoreCase(sbn.getPackageName()) && "stop".equalsIgnoreCase(sbn.getNotification().actions[0].title.toString())){
+                        if ("com.strava".equalsIgnoreCase(sbn.getPackageName()) && sbn.getNotification().actions.length > 0 && "stop".equalsIgnoreCase(sbn.getNotification().actions[0].title.toString())){
                             try {
                                 sbn.getNotification().actions[0].actionIntent.send();
                             } catch (PendingIntent.CanceledException e) {
                                 e.printStackTrace();
                             }
+                            break;
                         }
                     }
                 }

@@ -39,7 +39,9 @@ public class NotificationListener extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        if (!"com.strava".equalsIgnoreCase(sbn.getPackageName()) || sbn.getNotification().actions.length == 0){
+        if (!"com.strava".equalsIgnoreCase(sbn.getPackageName())){
+            return;
+        } else if (sbn.getNotification().actions == null || sbn.getNotification().actions.length == 0) {
             return;
         }
         Log.i(TAG,"**********  onNotificationPosted");

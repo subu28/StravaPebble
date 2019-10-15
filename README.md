@@ -1,4 +1,10 @@
-# StravaPebble
+# StravaPebble - Suspended from Google Play due to policy violation
+
+Google finds that the name is infringing on Strava's brand. Which is fair I guess.
+
+Am not planning an update or anything for the time being. There were a few dozens
+of people using the app. I think they will not be affected unless they need to
+download the app again.
 
 An android app to bring back the strava integration to your pebble wateches
 

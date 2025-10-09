@@ -14,6 +14,8 @@ I do not have a pebble watch currently. Most porbably will not be able to afford
 
 There are forks for this project that are probably more up to date and fix some issues. Please go through the list of forks for more up to date options.
 
+Most updated fork at the time of this update [https://github.com/flipflophhj/StravaPebble](https://github.com/flipflophhj/StravaPebble)
+
 Thanks
 
 ## Project Status - Abandoned by the creator, looking for Maintainers
